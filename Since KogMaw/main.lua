@@ -143,6 +143,8 @@ menu:menu("r", "R Settings")
 --	menu.passive:boolean("auto", "Auto move", true)
 menu:menu("draws", "Draw Settings")
 	menu.draws:boolean("killable", "DMG on enemy", true)
+	menu.draws:slider("dmgx", "DMG Bar X", 75, 0, 500, 5)
+	menu.draws:slider("dmgy", "DMG Bar Y", 140, 0, 500, 5)
 	menu.draws:boolean("permashow", "Permashow", true)
 	menu.draws:boolean("r_range", "R range", true)
 	--[[
@@ -588,37 +590,40 @@ local function ondraw()
 				local wDMG = GetDmg(spells.w, player, enemy) + GetDmg(spells.auto, player, enemy)
 				--local enemyHealth = GetRealHealth(enemy)
 				local enemyHealthPercentMath = ((100*enemy.health/enemy.maxHealth) / 100)
+				local dmgx = menu.draws.dmgx:get();
+				local dmgy = menu.draws.dmgy:get();
+				dmgy = dmgy - 250
 				if (qDMG + eDMG + rDMG + wDMG) < enemy.health then
-					graphics.draw_rectangle_2D(enemypos.x-80, enemypos.y-100, 150, 25, 2, graphics.argb(255,255,255,255))
+					graphics.draw_rectangle_2D(enemypos.x-dmgx, enemypos.y+dmgy, 150, 25, 2, graphics.argb(255,255,255,255))
 				else
-					graphics.draw_rectangle_2D(enemypos.x-80, enemypos.y-100, 150, 25, 5, graphics.argb(255,0,255,0))
+					graphics.draw_rectangle_2D(enemypos.x-dmgx, enemypos.y+dmgy, 150, 25, 5, graphics.argb(255,0,255,0))
 					graphics.draw_text_2D("KILLABLE", 24, enemypos.x-60, enemypos.y-60, graphics.argb(255,0,255,0))
 				end
 				local healthWidth = (150 * enemyHealthPercentMath)
-				graphics.draw_line_2D(enemypos.x-80, enemypos.y-87.5, (enemypos.x-80)+healthWidth, enemypos.y-87.5, 25, graphics.argb(200,255,0,0))
-				local startPosition = enemypos.x-80
+				local startPosition = enemypos.x-dmgx
+				graphics.draw_line_2D(startPosition, enemypos.y+dmgy+12.5, (startPosition)+healthWidth, enemypos.y+dmgy+12.5, 25, graphics.argb(200,255,0,0))
 				if qDMG > 0 then
 					local qDMGPercentMath = ((100*qDMG/enemy.maxHealth) / 100)
-					graphics.draw_line_2D(startPosition, enemypos.y-87.5, (startPosition)+(150 * qDMGPercentMath), enemypos.y-87.5, 25, graphics.argb(150,100,225,255))
-					graphics.draw_text_2D("Q", 16, (startPosition)+(((150*qDMGPercentMath)/2)-2), enemypos.y-87.5, graphics.argb(255,255,255,255))
+					graphics.draw_line_2D(startPosition, enemypos.y+dmgy+12.5, (startPosition)+(150 * qDMGPercentMath), enemypos.y+dmgy+12.5, 25, graphics.argb(150,100,225,255))
+					graphics.draw_text_2D("Q", 16, (startPosition)+(((150*qDMGPercentMath)/2)-2), enemypos.y+dmgy+12.5, graphics.argb(255,255,255,255))
 					startPosition = startPosition + (150 * qDMGPercentMath)
 				end
 				if wDMG > 0 then
 					local wDMGPercentMath = ((100*wDMG/enemy.maxHealth) / 100)
-					graphics.draw_line_2D(startPosition, enemypos.y-87.5, (startPosition)+(150 * wDMGPercentMath), enemypos.y-87.5, 25, graphics.argb(150,50, 150, 0))
-					graphics.draw_text_2D("W", 16, (startPosition)+(((150*wDMGPercentMath)/2)-2), enemypos.y-87.5, graphics.argb(255,255,255,255))
+					graphics.draw_line_2D(startPosition, enemypos.y+dmgy+12.5, (startPosition)+(150 * wDMGPercentMath), enemypos.y+dmgy+12.5, 25, graphics.argb(150,50, 150, 0))
+					graphics.draw_text_2D("W", 16, (startPosition)+(((150*wDMGPercentMath)/2)-2), enemypos.y+dmgy+12.5, graphics.argb(255,255,255,255))
 					startPosition = startPosition + (150 * wDMGPercentMath)
 				end
 				if eDMG > 0 then
 					local eDMGPercentMath = ((100*eDMG/enemy.maxHealth) / 100)
-					graphics.draw_line_2D(startPosition, enemypos.y-87.5, (startPosition)+(150 * eDMGPercentMath), enemypos.y-87.5, 25, graphics.argb(150,25, 100, 255))
-					graphics.draw_text_2D("E", 16, (startPosition)+(((150*eDMGPercentMath)/2)-2), enemypos.y-87.5, graphics.argb(255,255,255,255))
+					graphics.draw_line_2D(startPosition, enemypos.y+dmgy+12.5, (startPosition)+(150 * eDMGPercentMath), enemypos.y+dmgy+12.5, 25, graphics.argb(150,25, 100, 255))
+					graphics.draw_text_2D("E", 16, (startPosition)+(((150*eDMGPercentMath)/2)-2), enemypos.y+dmgy+12.5, graphics.argb(255,255,255,255))
 					startPosition = startPosition + (150 * eDMGPercentMath)
 				end
 				if rDMG > 0 then
 					local rDMGPercentMath = ((100*rDMG/enemy.maxHealth) / 100)
-					graphics.draw_line_2D(startPosition, enemypos.y-87.5, (startPosition)+(150 * rDMGPercentMath), enemypos.y-87.5, 25, graphics.argb(150,0, 20, 175))
-					graphics.draw_text_2D("R", 16, (startPosition)+(((150*rDMGPercentMath)/2)-2), enemypos.y-87.5, graphics.argb(255,255,255,255))
+					graphics.draw_line_2D(startPosition, enemypos.y+dmgy+12.5, (startPosition)+(150 * rDMGPercentMath), enemypos.y+dmgy+12.5, 25, graphics.argb(150,0, 20, 175))
+					graphics.draw_text_2D("R", 16, (startPosition)+(((150*rDMGPercentMath)/2)-2), enemypos.y+dmgy+12.5, graphics.argb(255,255,255,255))
 					startPosition = startPosition + (150 * rDMGPercentMath)
 				end
 			end
