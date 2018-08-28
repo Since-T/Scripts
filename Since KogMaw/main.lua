@@ -482,8 +482,8 @@ function Harass(target)
 end
 
 local function setKillstealAcitve(delay)
-	killStealActive = true;
-	DelayAction(function() killStealActive = false; end, delay+0.1)
+	killStealActive = false;
+	--DelayAction(function() killStealActive = false; end, delay+0.1)
 end
 
 function Killsteal()
