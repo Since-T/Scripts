@@ -5,8 +5,8 @@ local ts = module.internal('TS');
 
 
 
-local killStealActive = false;
-local passiveTriggered = false;
+killStealActive = false;
+passiveTriggered = false;
 
 ----------------
 -- Spell data --
