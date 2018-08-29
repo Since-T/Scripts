@@ -407,8 +407,8 @@ end
 
 local function w_range()
 	local w_range = {630, 650, 670, 690, 710};
-	range = (player.attackRange + w_range[player:spellSlot(spells.w.slot).level]) or 0;
-  return range
+	range = w_range[player:spellSlot(spells.w.slot).level] or 0;
+  return (range + player.attackRange)
 end
 
 -- R range calculation
